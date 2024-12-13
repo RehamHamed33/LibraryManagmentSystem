@@ -31,6 +31,27 @@ let displayBooks (dataGridView: DataGridView) =
         dataGridView.Rows.[row].Cells.["Borrower"].Value <- book.Borrower
         dataGridView.Rows.[row].Cells.["Borrow Date"].Value <- borrowDate)
 
+let addBook title author genre =
+    if String.IsNullOrWhiteSpace(title) || String.IsNullOrWhiteSpace(author) || String.IsNullOrWhiteSpace(genre) then
+        MessageBox.Show("Please fill in all fields (Title, Author, Genre).", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        |> ignore
+    elif libraryBooks.ContainsKey(title) then
+        MessageBox.Show("A book with this title already exists.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        |> ignore
+    else
+        let newBook =
+            { Title = title
+              Author = author
+              Genre = genre
+              IsBorrowed = false
+              BorrowDate = None
+              Borrower = "" }
+
+        libraryBooks <- libraryBooks.Add(title, newBook)
+
+        MessageBox.Show("Book added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        |> ignore
+
 
 // Windows Forms UI
 let form = new Form(Text = "Library Management System", Width = 600, Height = 600)
