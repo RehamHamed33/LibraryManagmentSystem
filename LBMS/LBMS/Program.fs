@@ -53,6 +53,31 @@ let addBook title author genre =
         |> ignore
 
 
+
+let borrowBook title borrower =
+    if String.IsNullOrWhiteSpace(borrower) then
+        MessageBox.Show("Please provide a borrower's name.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        |> ignore
+    else
+        match libraryBooks.TryFind title with
+        | Some book when not book.IsBorrowed ->
+            let updatedBook =
+                { book with
+                    IsBorrowed = true
+                    BorrowDate = Some DateTime.Now
+                    Borrower = borrower }
+
+            libraryBooks <- libraryBooks.Add(title, updatedBook)
+
+            MessageBox.Show("Book borrowed successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            |> ignore
+        | Some _ -> 
+            MessageBox.Show("The book is already borrowed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            |> ignore
+        | None -> 
+            MessageBox.Show("Book not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            |> ignore
+
 // Windows Forms UI
 let form = new Form(Text = "Library Management System", Width = 600, Height = 600)
 
