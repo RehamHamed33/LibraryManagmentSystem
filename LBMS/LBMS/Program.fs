@@ -53,6 +53,22 @@ let addBook title author genre =
         |> ignore
 
 
+let searchBook title =
+    match libraryBooks.TryFind title with
+    | Some book ->
+        let status = if book.IsBorrowed then "Borrowed" else "Available"
+
+        MessageBox.Show(
+            $"Title: {book.Title}\nAuthor: {book.Author}\nGenre: {book.Genre}\nStatus: {status}",
+            "Book Found",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Information
+        )
+        |> ignore
+    | None ->
+        MessageBox.Show("Book not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        |> ignore
+
 
 let borrowBook title borrower =
     if String.IsNullOrWhiteSpace(borrower) then
