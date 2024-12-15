@@ -94,6 +94,26 @@ let borrowBook title borrower =
             MessageBox.Show("Book not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             |> ignore
 
+let returnBook title =
+    match libraryBooks.TryFind title with
+    | Some book when book.IsBorrowed ->
+        let updatedBook =
+            { book with
+                IsBorrowed = false
+                BorrowDate = None
+                Borrower = "" }
+
+        libraryBooks <- libraryBooks.Add(title, updatedBook)
+
+        MessageBox.Show("Book returned successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        |> ignore
+    | Some _ -> 
+        MessageBox.Show("The book is already available.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        |> ignore
+    | None -> 
+        MessageBox.Show("Book not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        |> ignore
+
 // Windows Forms UI
 let form = new Form(Text = "Library Management System", Width = 600, Height = 600)
 
