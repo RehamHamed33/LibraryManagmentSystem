@@ -114,6 +114,15 @@ let returnBook title =
         MessageBox.Show("Book not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         |> ignore
 
+let deleteBook title =
+    if libraryBooks.ContainsKey(title) then
+        libraryBooks <- libraryBooks.Remove(title)
+        MessageBox.Show("Book deleted successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        |> ignore
+    else
+        MessageBox.Show("Book not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        |> ignore
+
 // Windows Forms UI
 let form = new Form(Text = "Library Management System", Width = 600, Height = 600)
 
@@ -162,10 +171,10 @@ returnButton.Click.Add(fun _ ->
     displayBooks dataGridView
 )
 searchButton.Click.Add(fun _ -> searchBook searchInput.Text)
-// deleteButton.Click.Add(fun _ ->
-//     deleteBook titleInput.Text
-//     displayBooks dataGridView
-// )
+deleteButton.Click.Add(fun _ ->
+    deleteBook titleInput.Text
+    displayBooks dataGridView
+)
 
 dataGridView.CellClick.Add(fun e ->
     if e.RowIndex >= 0 && e.RowIndex < dataGridView.Rows.Count then
